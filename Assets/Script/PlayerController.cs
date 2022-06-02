@@ -37,19 +37,6 @@ namespace PlayerController
         void Update()
         {
             //player movements
-            /*if(going == Going.Up || going == Going.Bottom)
-            {
-                deltaX = Input.GetAxisRaw("Horizontal");
-                Debug.Log("deltaX :" + deltaX);
-            }  
-            else
-            {
-                deltaY = Input.GetAxisRaw("Vertical");
-                Debug.Log("deltaY :" + deltaY);
-            }*/
-            //deltaX = Input.GetAxisRaw("Horizontal");
-            //deltaY = Input.GetAxisRaw("Vertical");
-
             if (Input.GetKeyDown(KeyCode.D) && going != Going.Left)
             {
                 Xdirection = 1;
