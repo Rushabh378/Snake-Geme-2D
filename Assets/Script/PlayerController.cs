@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 
 namespace PlayerController
 {
@@ -11,9 +11,6 @@ namespace PlayerController
         [SerializeField]
         private Camera cam;
         private Vector3 viewPos;
-        [SerializeField]
-        private GameObject[] body = new GameObject[2];
-        private List<Transform> snakeBody;
         private int select = 0;
         private Going going;
         private Animator animator;
@@ -27,6 +24,17 @@ namespace PlayerController
         private float maxX = 0.82f;
         private float minY = 0.10f;
         private float maxY = 0.83f;
+
+        [SerializeField]
+        private TextMeshProUGUI scoreText;
+        private int score;
+        [SerializeField]
+        private GameObject gameover;
+
+
+        [SerializeField]
+        private GameObject[] body = new GameObject[2];
+        private List<Transform> snakeBody;
 
         private void Start()
         {
@@ -114,10 +122,12 @@ namespace PlayerController
             if(collision.tag == "Food")
             {
                 bodyGrow();
+                increasScore(50);
                 collision.gameObject.transform.position = Spawner.randomizer();
             }
             if(collision.tag == "Body")
             {
+                gameover.SetActive(true);
                 Initialization();
             }
         }
@@ -129,6 +139,10 @@ namespace PlayerController
             }
             if (Time.timeScale == 0)
                 Time.timeScale = 1;
+            if(gameover.activeSelf == true)
+            {
+                gameover.SetActive(false);
+            }
             snakeBody.Clear();
             snakeBody.Add(transform);
             snakeBody.Add(body[0].transform);
@@ -137,7 +151,13 @@ namespace PlayerController
             going = Going.Up;
             Ydirection = 1f;
             Xdirection = 0f;
-
+            score = 0;
+            scoreText.text = "Score:" + score.ToString();
+        }
+        private void increasScore(int increment)
+        {
+            score += increment;
+            scoreText.text = "Score:" + score.ToString();
         }
     }
 }
