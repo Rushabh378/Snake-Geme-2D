@@ -128,10 +128,10 @@ namespace PlayerController
             if(collision.tag == "Body")
             {
                 gameover.SetActive(true);
-                Initialization();
+                Time.timeScale = 0;
             }
         }
-        private void Initialization()
+        public void Initialization()
         {
             for(int i = 3; i < snakeBody.Count; i++)
             {
@@ -140,9 +140,7 @@ namespace PlayerController
             if (Time.timeScale == 0)
                 Time.timeScale = 1;
             if(gameover.activeSelf == true)
-            {
                 gameover.SetActive(false);
-            }
             snakeBody.Clear();
             snakeBody.Add(transform);
             snakeBody.Add(body[0].transform);
