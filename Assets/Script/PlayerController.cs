@@ -15,14 +15,13 @@ namespace PlayerController
         private GameObject[] body = new GameObject[2];
         private List<Transform> snakeBody;
         private int select = 0;
-        private float deltaX;
-        private float deltaY;
         private Going going;
         private Animator animator;
         
 
-        private float Xdirection = 1f;
-        private float Ydirection = 0f;
+        private float Xdirection = 0f;
+        private float Ydirection = 1f;
+        private Vector2 initPos = new Vector2(18f, 11f);
 
         private float minX = 0.05f;
         private float maxX = 0.82f;
@@ -33,52 +32,48 @@ namespace PlayerController
         {
             animator = GetComponent<Animator>();
             snakeBody = new List<Transform>();
-            snakeBody.Add(transform);
-            snakeBody.Add(body[0].transform);
-            snakeBody.Add(body[1].transform);
+            Initialization();
         }
         void Update()
         {
             //player movements
-            if(going == Going.Up || going == Going.Bottom)
+            /*if(going == Going.Up || going == Going.Bottom)
             {
                 deltaX = Input.GetAxisRaw("Horizontal");
                 Debug.Log("deltaX :" + deltaX);
             }  
             else
             {
-                Debug.Log("vertical");
                 deltaY = Input.GetAxisRaw("Vertical");
-            }
+                Debug.Log("deltaY :" + deltaY);
+            }*/
             //deltaX = Input.GetAxisRaw("Horizontal");
             //deltaY = Input.GetAxisRaw("Vertical");
 
-            if (deltaX > 0)
+            if (Input.GetKeyDown(KeyCode.D) && going != Going.Left)
             {
                 Xdirection = 1;
                 Ydirection = 0;
                 going = Going.Right;
             }
-            else if(deltaX < 0)
+            else if(Input.GetKeyDown(KeyCode.A) && going != Going.Right)
             {
                 Xdirection = -1;
                 Ydirection = 0;
                 going = Going.Left;
             }
-            if(deltaY > 0)
+            if(Input.GetKeyDown(KeyCode.W) && going != Going.Bottom)
             {
                 Ydirection = 1;
                 Xdirection = 0;
                 going = Going.Up;
             }
-            else if(deltaY < 0)
+            else if(Input.GetKeyDown(KeyCode.S) && going != Going.Up)
             {
                 Ydirection = -1;
                 Xdirection = 0;
                 going = Going.Bottom;
             }
-
-            Debug.Log("Going: " + going);
             animator.SetInteger("Direction", (int)going);
 
             //warping
@@ -134,6 +129,28 @@ namespace PlayerController
                 bodyGrow();
                 collision.gameObject.transform.position = Spawner.randomizer();
             }
+            if(collision.tag == "Body")
+            {
+                Initialization();
+            }
+        }
+        private void Initialization()
+        {
+            for(int i = 3; i < snakeBody.Count; i++)
+            {
+                Destroy(snakeBody[i].gameObject);
+            }
+            if (Time.timeScale == 0)
+                Time.timeScale = 1;
+            snakeBody.Clear();
+            snakeBody.Add(transform);
+            snakeBody.Add(body[0].transform);
+            snakeBody.Add(body[1].transform);
+            transform.position = initPos;
+            going = Going.Up;
+            Ydirection = 1f;
+            Xdirection = 0f;
+
         }
     }
 }
