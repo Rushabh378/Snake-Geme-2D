@@ -5,13 +5,22 @@ public class Spawner : MonoBehaviour
     private static BoxCollider2D spawnArea;
     [SerializeField]
     private GameObject food;
+    [SerializeField]
+    private GameObject poisen;
+    [SerializeField]
+    private GameObject shield;
+    [SerializeField]
+    private GameObject doubler;
 
     private void Start()
     {
         spawnArea = GetComponent<BoxCollider2D>();
-        randomizeFood();
+        RandomizeFood();
+        RandomizePoisen();
+        TimerManagement.setTimer(RandomizeShield, 12f,"shieldTimer");
+        TimerManagement.setTimer(RandomizeDoubler, 15f,"doublerTimer");
     }
-    public static Vector2 randomizer()
+    public Vector2 Randomizer()
     {
         Bounds bounds = spawnArea.bounds;
 
@@ -20,9 +29,30 @@ public class Spawner : MonoBehaviour
 
         return new Vector2(x, y);
     }
-    private void randomizeFood()
+    private void RandomizeFood()
     {
-        food.transform.position = randomizer();
-        TimerManagement.setTimer(randomizeFood, 5f);
+        food.transform.position = Randomizer();
+        TimerManagement.setTimer(RandomizeFood, 5f,"foodTimer");
+    }
+    public void RandomizePoisen()
+    {
+        Destroy(GameObject.FindGameObjectWithTag("poisen"));
+        Instantiate(poisen);
+        poisen.transform.position = Randomizer();
+        TimerManagement.setTimer(RandomizePoisen, 6f,"poisenTimer");
+    }
+    public void RandomizeShield()
+    {
+        Destroy(GameObject.FindGameObjectWithTag("Shield"));
+        Instantiate(shield);
+        shield.transform.position = Randomizer();
+        TimerManagement.setTimer(RandomizeShield, 12f,"shieldTimer");
+    }
+    public void RandomizeDoubler()
+    {
+        Destroy(GameObject.FindGameObjectWithTag("Doubler"));
+        Instantiate(doubler);
+        doubler.transform.position = Randomizer();
+        TimerManagement.setTimer(RandomizeDoubler, 4f, "doublerTimer");
     }
 }

@@ -31,10 +31,26 @@ namespace PlayerController
         [SerializeField]
         private GameObject gameover;
 
+        [SerializeField]
+        private Spawner spawner;
+
+        private bool shield;
+        [SerializeField]
+        private Material defaultMaterial;
+
+        private int doubler = 1;
+        [SerializeField]
+        private GameObject doublerObject;
+        [SerializeField]
+        private GameObject shieldObject;
 
         [SerializeField]
         private GameObject[] body = new GameObject[2];
         private List<Transform> snakeBody;
+
+        private SpriteRenderer myRenderer;
+
+        
 
         private void Start()
         {
@@ -110,25 +126,56 @@ namespace PlayerController
             transform.position = new Vector2(newXPos, newYPos);
         }
 
-        private void bodyGrow()
-        {
-            Transform bodySegment = Instantiate(body[1].transform);
-            bodySegment.position = snakeBody[snakeBody.Count - 1].position;
-            snakeBody.Add(bodySegment);
-        }
-
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.tag == "Food")
+            if (collision.tag == "Food")
             {
                 bodyGrow();
                 increasScore(50);
-                collision.gameObject.transform.position = Spawner.randomizer();
+                collision.gameObject.transform.position = spawner.Randomizer();
             }
-            if(collision.tag == "Body")
+            else if (collision.tag == "Body")
             {
-                gameover.SetActive(true);
-                Time.timeScale = 0;
+                if (!shield)
+                {
+                    gameover.SetActive(true);
+                    doublerObject.SetActive(false);
+                    shieldObject.SetActive(false);
+                    
+                    Time.timeScale = 0;
+                }
+                
+            }
+            else if (collision.tag == "poisen")
+            {
+                bodyUngrow();
+                decreasScore(50);
+                TimerManagement.cancelTimer("poisenTimer");
+                TimerManagement.setTimer(spawner.RandomizePoisen, 4f,"poisenTimer");
+                Destroy(collision.gameObject);
+            }
+            else if(collision.tag == "Shield")
+            {
+                shield = true;
+                shieldObject.SetActive(false);
+                for(int i = 2; i < snakeBody.Count; i++)
+                {
+                    myRenderer = snakeBody[i].gameObject.GetComponent<SpriteRenderer>();
+                    myRenderer.color = Random.ColorHSV();
+                }
+                TimerManagement.cancelTimer("shieldTimer");
+                TimerManagement.setTimer(spawner.RandomizeShield, 10f, "shieldTimer");
+                Destroy(collision.gameObject);
+                TimerManagement.setTimer(shieldOff, 5f);
+            }
+            else if(collision.tag == "Doubler")
+            {
+                doubler = 2;
+                doublerObject.SetActive(false);
+                TimerManagement.cancelTimer("doublerTimer");
+                TimerManagement.setTimer(spawner.RandomizeDoubler, 15f, "doublerTimer");
+                Destroy(collision.gameObject);
+                TimerManagement.setTimer(doublerOff, 6f);
             }
         }
         public void Initialization()
@@ -151,11 +198,49 @@ namespace PlayerController
             Xdirection = 0f;
             score = 0;
             scoreText.text = "Score:" + score.ToString();
+            shield = false;
+            doublerObject.SetActive(false);
+            shieldObject.SetActive(false);
+        }
+        private void bodyGrow()
+        {
+            Transform bodySegment = Instantiate(body[1].transform);
+            bodySegment.position = snakeBody[snakeBody.Count - 1].position;
+            snakeBody.Add(bodySegment);
+        }
+        private void bodyUngrow()
+        {
+            if(snakeBody.Count > 3)
+            {
+                Destroy(snakeBody[snakeBody.Count - 1].gameObject);
+                snakeBody.RemoveAt(snakeBody.Count - 1);
+            }
         }
         private void increasScore(int increment)
         {
+            increment *= doubler;
             score += increment;
             scoreText.text = "Score:" + score.ToString();
+        }
+        private void decreasScore(int decrement)
+        {
+            score -= decrement;
+            scoreText.text = "Score:" + score.ToString();
+        }
+        public void shieldOff()
+        {
+            shield = false;
+            for (int i = 2; i < snakeBody.Count; i++)
+            {
+                myRenderer = snakeBody[i].gameObject.GetComponent<SpriteRenderer>();
+                myRenderer.color = new Color(0.5f,0.9f,0.6f,1f);
+                
+            }
+        }
+        public void doublerOff()
+        {
+            doubler = 1;
+            doublerObject.SetActive(false);
         }
     }
 }
