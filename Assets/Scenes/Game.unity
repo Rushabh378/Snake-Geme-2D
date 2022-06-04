@@ -1382,11 +1382,11 @@ RectTransform:
   m_Father: {fileID: 423967784}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 252, y: -22}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -22}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &451139443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2590,11 +2590,11 @@ RectTransform:
   m_Father: {fileID: 423967784}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 252, y: 71}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 71}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &951942352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4026,6 +4026,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1379040767}
+        m_TargetAssemblyTypeName: PlayerController.PlayerController, Assembly-CSharp
+        m_MethodName: Initialization
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2016795931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4713,7 +4725,7 @@ PrefabInstance:
     - target: {fileID: 5627459476997808991, guid: e2e65b15835a80543951172bdb45d219, type: 3}
       propertyPath: clips.Array.data[3]
       value: 
-      objectReference: {fileID: 8300000, guid: 25ca183fe2da25a4da9e88b0d2cb4a18, type: 3}
+      objectReference: {fileID: 8300000, guid: 38447cdc425e83f4db2a0d5a60711308, type: 3}
     - target: {fileID: 6130857047013370299, guid: e2e65b15835a80543951172bdb45d219, type: 3}
       propertyPath: m_audioClip
       value: 

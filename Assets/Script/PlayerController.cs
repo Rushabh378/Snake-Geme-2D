@@ -96,7 +96,7 @@ namespace PlayerController
             //Debug.Log("vewPos y: " + viewPos.y);
             if(viewPos.x < minX)
             {
-                transform.position = cam.ViewportToWorldPoint(new Vector3(maxX, viewPos.y, viewPos.z));
+                transform.position = cam.ViewportToWorldPoint(new Vector3(maxX-0.01f, viewPos.y, viewPos.z));
             }
             if(viewPos.y < minY)
             {
