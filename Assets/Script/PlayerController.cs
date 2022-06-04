@@ -35,14 +35,15 @@ namespace PlayerController
         private Spawner spawner;
 
         private bool shield;
-        [SerializeField]
-        private Material defaultMaterial;
-
         private int doubler = 1;
         [SerializeField]
         private GameObject doublerObject;
         [SerializeField]
         private GameObject shieldObject;
+
+        [SerializeField]
+        private AudioClip[] clips;
+        private AudioSource eats;
 
         [SerializeField]
         private GameObject[] body = new GameObject[2];
@@ -55,7 +56,9 @@ namespace PlayerController
         private void Start()
         {
             animator = GetComponent<Animator>();
+            eats = GetComponent<AudioSource>();
             snakeBody = new List<Transform>();
+            
             Initialization();
         }
         void Update()
@@ -130,6 +133,7 @@ namespace PlayerController
         {
             if (collision.tag == "Food")
             {
+                eatSound(clips[0]);
                 bodyGrow();
                 increasScore(50);
                 collision.gameObject.transform.position = spawner.Randomizer();
@@ -138,6 +142,7 @@ namespace PlayerController
             {
                 if (!shield)
                 {
+                    eatSound(clips[3]);
                     gameover.SetActive(true);
                     doublerObject.SetActive(false);
                     shieldObject.SetActive(false);
@@ -148,6 +153,7 @@ namespace PlayerController
             }
             else if (collision.tag == "poisen")
             {
+                eatSound(clips[1]);
                 bodyUngrow();
                 decreasScore(50);
                 TimerManagement.cancelTimer("poisenTimer");
@@ -156,8 +162,9 @@ namespace PlayerController
             }
             else if(collision.tag == "Shield")
             {
+                eatSound(clips[2]);
                 shield = true;
-                shieldObject.SetActive(false);
+                shieldObject.SetActive(true);
                 for(int i = 2; i < snakeBody.Count; i++)
                 {
                     myRenderer = snakeBody[i].gameObject.GetComponent<SpriteRenderer>();
@@ -170,8 +177,9 @@ namespace PlayerController
             }
             else if(collision.tag == "Doubler")
             {
+                eatSound(clips[1]);
                 doubler = 2;
-                doublerObject.SetActive(false);
+                doublerObject.SetActive(true);
                 TimerManagement.cancelTimer("doublerTimer");
                 TimerManagement.setTimer(spawner.RandomizeDoubler, 15f, "doublerTimer");
                 Destroy(collision.gameObject);
@@ -230,6 +238,7 @@ namespace PlayerController
         public void shieldOff()
         {
             shield = false;
+            shieldObject.SetActive(false);
             for (int i = 2; i < snakeBody.Count; i++)
             {
                 myRenderer = snakeBody[i].gameObject.GetComponent<SpriteRenderer>();
@@ -241,6 +250,10 @@ namespace PlayerController
         {
             doubler = 1;
             doublerObject.SetActive(false);
+        }
+        public void eatSound(AudioClip clip)
+        {
+            eats.PlayOneShot(clip);
         }
     }
 }

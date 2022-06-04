@@ -12,6 +12,10 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private GameObject doubler;
 
+    private GameObject poisenClone;
+    private GameObject shieldClone;
+    private GameObject doublerClone;
+
     private void Start()
     {
         spawnArea = GetComponent<BoxCollider2D>();
@@ -36,23 +40,26 @@ public class Spawner : MonoBehaviour
     }
     public void RandomizePoisen()
     {
-        Destroy(GameObject.FindGameObjectWithTag("poisen"));
-        Instantiate(poisen);
-        poisen.transform.position = Randomizer();
+        if(poisenClone != null)
+            Destroy(poisenClone);
+        poisenClone = Instantiate(poisen);
+        poisenClone.transform.position = Randomizer();
         TimerManagement.setTimer(RandomizePoisen, 6f,"poisenTimer");
     }
     public void RandomizeShield()
     {
-        Destroy(GameObject.FindGameObjectWithTag("Shield"));
-        Instantiate(shield);
-        shield.transform.position = Randomizer();
+        if(shieldClone != null)
+            Destroy(shieldClone);
+        shieldClone = Instantiate(shield);
+        shieldClone.transform.position = Randomizer();
         TimerManagement.setTimer(RandomizeShield, 12f,"shieldTimer");
     }
     public void RandomizeDoubler()
     {
-        Destroy(GameObject.FindGameObjectWithTag("Doubler"));
-        Instantiate(doubler);
-        doubler.transform.position = Randomizer();
+        if(doublerClone != null)
+            Destroy(doublerClone);
+        doublerClone = Instantiate(doubler);
+        doublerClone.transform.position = Randomizer();
         TimerManagement.setTimer(RandomizeDoubler, 4f, "doublerTimer");
     }
 }
