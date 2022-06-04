@@ -5,7 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Food
-  - Neck
+  - Body
+  - poisen
+  - Shield
+  - Doubler
   layers:
   - Default
   - TransparentFX
