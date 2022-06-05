@@ -14,7 +14,7 @@ namespace PlayerController
         private int select = 0;
         private Going going;
         private Animator animator;
-        
+
 
         private float Xdirection = 0f;
         private float Ydirection = 1f;
@@ -51,14 +51,14 @@ namespace PlayerController
 
         private SpriteRenderer myRenderer;
 
-        
+
 
         private void Start()
         {
             animator = GetComponent<Animator>();
             eats = GetComponent<AudioSource>();
             snakeBody = new List<Transform>();
-            
+
             Initialization();
         }
         void Update()
@@ -70,19 +70,19 @@ namespace PlayerController
                 Ydirection = 0;
                 going = Going.Right;
             }
-            else if(Input.GetKeyDown(KeyCode.A) && going != Going.Right)
+            else if (Input.GetKeyDown(KeyCode.A) && going != Going.Right)
             {
                 Xdirection = -1;
                 Ydirection = 0;
                 going = Going.Left;
             }
-            if(Input.GetKeyDown(KeyCode.W) && going != Going.Bottom)
+            if (Input.GetKeyDown(KeyCode.W) && going != Going.Bottom)
             {
                 Ydirection = 1;
                 Xdirection = 0;
                 going = Going.Up;
             }
-            else if(Input.GetKeyDown(KeyCode.S) && going != Going.Up)
+            else if (Input.GetKeyDown(KeyCode.S) && going != Going.Up)
             {
                 Ydirection = -1;
                 Xdirection = 0;
@@ -94,29 +94,29 @@ namespace PlayerController
             viewPos = cam.WorldToViewportPoint(transform.position);
             //Debug.Log("viewPos x:" + viewPos.x);
             //Debug.Log("vewPos y: " + viewPos.y);
-            if(viewPos.x < minX)
+            if (viewPos.x < minX)
             {
-                transform.position = cam.ViewportToWorldPoint(new Vector3(maxX-0.01f, viewPos.y, viewPos.z));
+                transform.position = cam.ViewportToWorldPoint(new Vector3(maxX - 0.01f, viewPos.y, viewPos.z));
             }
-            if(viewPos.y < minY)
+            if (viewPos.y < minY)
             {
                 transform.position = cam.ViewportToWorldPoint(new Vector3(viewPos.x, maxY, viewPos.z));
             }
-            if(viewPos.x > maxX)
+            if (viewPos.x > maxX)
             {
-                transform.position = cam.ViewportToWorldPoint(new Vector3(minX+0.01f, viewPos.y, viewPos.z));
+                transform.position = cam.ViewportToWorldPoint(new Vector3(minX + 0.01f, viewPos.y, viewPos.z));
             }
-            if(viewPos.y > maxY)
+            if (viewPos.y > maxY)
             {
-                transform.position = cam.ViewportToWorldPoint(new Vector3(viewPos.x, minY+0.01f, viewPos.z));
+                transform.position = cam.ViewportToWorldPoint(new Vector3(viewPos.x, minY + 0.01f, viewPos.z));
             }
-            
+
         }
         private void FixedUpdate()
         {
             //classic snake like body movement.
             select = snakeBody.Count - 1; ;
-            while (select >=1)
+            while (select >= 1)
             {
                 snakeBody[select].position = snakeBody[select - 1].position;
                 select--;
@@ -146,10 +146,10 @@ namespace PlayerController
                     gameover.SetActive(true);
                     doublerObject.SetActive(false);
                     shieldObject.SetActive(false);
-                    
-                    Time.timeScale = 0;
+
+                    pauseGame();
                 }
-                
+
             }
             else if (collision.tag == "poisen")
             {
@@ -157,15 +157,15 @@ namespace PlayerController
                 bodyUngrow();
                 decreasScore(50);
                 TimerManagement.cancelTimer("poisenTimer");
-                TimerManagement.setTimer(spawner.RandomizePoisen, 4f,"poisenTimer");
+                TimerManagement.setTimer(spawner.RandomizePoisen, 4f, "poisenTimer");
                 Destroy(collision.gameObject);
             }
-            else if(collision.tag == "Shield")
+            else if (collision.tag == "Shield")
             {
                 eatSound(clips[2]);
                 shield = true;
                 shieldObject.SetActive(true);
-                for(int i = 2; i < snakeBody.Count; i++)
+                for (int i = 2; i < snakeBody.Count; i++)
                 {
                     myRenderer = snakeBody[i].gameObject.GetComponent<SpriteRenderer>();
                     myRenderer.color = Random.ColorHSV();
@@ -175,7 +175,7 @@ namespace PlayerController
                 Destroy(collision.gameObject);
                 TimerManagement.setTimer(shieldOff, 5f);
             }
-            else if(collision.tag == "Doubler")
+            else if (collision.tag == "Doubler")
             {
                 eatSound(clips[1]);
                 doubler = 2;
@@ -186,6 +186,16 @@ namespace PlayerController
                 TimerManagement.setTimer(doublerOff, 6f);
             }
         }
+
+        public static void pauseGame()
+        {
+            Time.timeScale = 0;
+        }
+        public static void resumeGame()
+        {
+            Time.timeScale = 1;
+        }
+
         public void Initialization()
         {
             for(int i = 3; i < snakeBody.Count; i++)
@@ -253,7 +263,8 @@ namespace PlayerController
         }
         public void eatSound(AudioClip clip)
         {
-            eats.PlayOneShot(clip);
+            if(eats.enabled != false)
+                eats.PlayOneShot(clip);
         }
     }
 }
